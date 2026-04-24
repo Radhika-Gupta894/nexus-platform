@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nexus-primary: #1E5BFF;
+  --color-nexus-dark: #0F3FD9;
+  --color-nexus-light: #EAF1FF;
+  --color-nexus-bg: #F5F7FB;
+  --color-nexus-card: #FFFFFF;
+  --color-nexus-border: #E4E8F2;
+  --color-nexus-text: #111827;
+  --color-nexus-text-muted: #6B7280;
+  --color-nexus-success: #16A34A;
+  --color-nexus-warning: #F59E0B;
+  --color-nexus-danger: #EF4444;
+}
+
+@layer base {
+  body {
+    background-color: #F5F7FB;
+    color: #111827;
+    @apply font-sans antialiased;
+  }
+}
+
+@layer components {
+  .premium-card {
+    @apply bg-white border border-[var(--color-nexus-border)] rounded-[18px] shadow-sm transition-all duration-300;
+  }
+  
+  .premium-card:hover {
+    @apply -translate-y-1 shadow-lg shadow-blue-500/5;
+  }
+  
+  .nexus-btn-primary {
+    @apply bg-[var(--color-nexus-primary)] text-white px-6 py-3 rounded-xl font-bold hover:bg-[var(--color-nexus-dark)] transition-all shadow-lg shadow-blue-500/10 active:scale-95;
+  }
+
+  .nexus-btn-secondary {
+    @apply bg-white text-[var(--color-nexus-primary)] border border-[var(--color-nexus-primary)] px-6 py-3 rounded-xl font-bold hover:bg-[var(--color-nexus-light)] transition-all;
+  }
+
+  .nexus-input {
+    @apply w-full bg-white border border-[var(--color-nexus-border)] rounded-xl p-4 text-[var(--color-nexus-text)] outline-none focus:ring-2 focus:ring-[var(--color-nexus-primary)]/10 focus:border-[var(--color-nexus-primary)] transition-all;
+  }
+}
