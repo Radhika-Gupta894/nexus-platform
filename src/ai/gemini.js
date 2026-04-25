@@ -1,142 +1,126 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-/* API KEY */
-const getApiKey = () => {
-  return import.meta.env.VITE_GEMINI_API_KEY || null;
-};
+/* ==============================
+   API CONFIGURATION
+============================== */
+const getApiKey = () => import.meta.env.VITE_GEMINI_API_KEY || "";
 
-/* AI INSTANCE */
 const getAIInstance = () => {
   const key = getApiKey();
-  if (!key) return null;
+  if (!key || key.trim() === "") {
+    console.error("🚨 NEXUS ERROR: VITE_GEMINI_API_KEY is empty or missing in .env.");
+    return null;
+  }
   return new GoogleGenerativeAI(key);
 };
 
-/* STABLE MODELS */
 const MODELS = [
+  "gemini-1.5-flash-latest",
   "gemini-1.5-flash",
-  "gemini-1.5-flash-8b",
-  "gemini-2.0-flash"
+  "gemini-1.5-pro",
+  "gemini-pro"
 ];
 
-/* TRY MODELS */
-const runPrompt = async (prompt) => {
+/* ==============================
+   UNIVERSAL MODEL RUNNER
+ ============================== */
+const runPrompt = async (prompt, retryCount = 1) => {
   const genAI = getAIInstance();
-  if (!genAI) throw new Error("Missing API Key");
+  if (!genAI) throw new Error("API Key Missing");
+
+  let lastError = null;
 
   for (const modelName of MODELS) {
     try {
-      const model = genAI.getGenerativeModel({
-        model: modelName
-      });
-
+      console.log(`⚡ NEXUS AI: Attempting ${modelName}...`);
+      
+      const model = genAI.getGenerativeModel({ model: modelName });
       const result = await model.generateContent(prompt);
-      return (await result.response).text();
+      const text = result.response.text();
 
-    } catch (err) {
-      console.log("Model failed:", modelName);
+      if (text) {
+        console.log(`✅ NEXUS AI: Connected to ${modelName}`);
+        return text;
+      }
+    } catch (error) {
+      lastError = error;
+      const errorMsg = error.message || "";
+      console.warn(`❌ NEXUS AI: ${modelName} unavailable (${errorMsg})`);
+      
+      // If error is definitely API key related, stop and report
+      if (errorMsg.includes("API key not found") || errorMsg.includes("invalid") || errorMsg.includes("expired")) {
+        throw new Error(`Invalid API Key: ${errorMsg}`);
+      }
+      
+      continue; // Try next model
     }
   }
 
-  throw new Error("All models busy");
+  throw lastError || new Error("All AI models are currently overwhelmed or unavailable.");
 };
 
-export const parseCleanJSON = (rawText) => {
-  if (!rawText) return null;
+/* ==============================
+   MOCK FALLBACK (Emergency only)
+ ============================== */
+const getMockResponse = (prompt) => {
+  if (prompt.includes("Analyze")) {
+    return JSON.stringify({ category: "General", urgency: "Medium", summary: "NEXUS: Analyzing intelligence offline..." });
+  }
+  return "NEXUS Core is in secure offline mode. Intelligence services are restricted. Please check your API key authorization.";
+};
 
+/* ==============================
+   CORE EXPORTS
+ ============================== */
+export const parseCleanJSON = (rawText) => {
   try {
     return JSON.parse(rawText.trim());
-  } catch (e) {
-    try {
-      const cleaned = rawText
-        .replace(/```json|```/g, "")
-        .trim();
-
-      return JSON.parse(cleaned);
-    } catch (e2) {
-      const match = rawText.match(/\{[\s\S]*\}/);
-
-      if (match) {
-        try {
-          return JSON.parse(match[0]);
-        } catch {}
-      }
-
-      return null;
+  } catch {
+    const cleaned = (rawText || "").replace(/```json|```/g, "").trim();
+    try { return JSON.parse(cleaned); } catch {
+      const match = (rawText || "").match(/\{[\s\S]*\}/);
+      return match ? JSON.parse(match[0]) : null;
     }
   }
 };
 
-/* CHAT */
 export const chatWithAI = async (message) => {
   try {
-    return await runPrompt(`
-You are NEXUS Core AI.
+    return await runPrompt(`Respond to: ${message}`);
+  } catch (error) {
+    console.error("🚨 Critical AI Error:", error);
+    
+    const errorMsg = error.message || "";
+    
+    if (errorMsg.includes("404") || errorMsg.includes("not found")) {
+      return `NEXUS AI Connection Error (404): The selected models are not found for your API key. This can happen if the 'Generative Language API' is not enabled for your project or if your region is restricted. Please check your Google AI Studio dashboard.`;
+    }
+    
+    if (errorMsg.includes("API key") || errorMsg.includes("403") || errorMsg.includes("401")) {
+      return `NEXUS AI Error: Authentication failed. ${errorMsg}. Please ensure your VITE_GEMINI_API_KEY is correct.`;
+    }
+    
+    if (errorMsg.includes("busy") || errorMsg.includes("overloaded") || errorMsg.includes("503")) {
+      return "NEXUS AI is currently experiencing high traffic. Retrying connection... (Wait a moment and try again)";
+    }
 
-You help with:
-- civic complaints
-- volunteers
-- city issues
-- emergency coordination
-
-Reply professionally, briefly, clearly.
-
-User Message:
-${message}
-`);
-  } catch (err) {
-    return "NEXUS AI temporarily busy. Please retry.";
+    return `NEXUS AI Connection Issue: ${errorMsg}`;
   }
 };
 
-/* REPORT ANALYSIS */
 export const analyzeReport = async (text) => {
   try {
-    return await runPrompt(`
-Return ONLY JSON:
-{
- "category":"",
- "urgency":"High|Medium|Low",
- "summary":""
-}
-
-Analyze:
-${text}
-`);
-  } catch (err) {
-    return JSON.stringify({
-      category: "General",
-      urgency: "Medium",
-      summary: "Auto fallback analysis"
-    });
+    return await runPrompt(`Analyze: ${text}`, 0);
+  } catch {
+    return JSON.stringify({ category: "General", urgency: "Medium", summary: "Offline analysis pending." });
   }
 };
 
-/* CRISIS DETECTION */
 export const detectCrisis = async (reports) => {
-  const data = reports
-    .map((r) => `${r.type} @ ${r.location}`)
-    .join(", ");
-
+  if (!reports?.length) return null;
   try {
-    return await runPrompt(`
-Return ONLY JSON:
-{
- "crisis":"",
- "area":"",
- "severity":"High|Medium|Low",
- "action":""
-}
-
-Data:
-${data}
-`);
-  } catch (err) {
-    return JSON.stringify({
-      crisis: "Unknown",
-      area: "Unknown",
-      severity: "Medium",
-      action: "Manual review required"
-    });
+    return await runPrompt(`Crisis scan: ${JSON.stringify(reports)}`, 0);
+  } catch {
+    return JSON.stringify({ crisis: "Unknown", area: "N/A", severity: "Low", action: "Manual check." });
   }
 };
