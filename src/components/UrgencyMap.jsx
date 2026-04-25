@@ -5,7 +5,36 @@ import { db } from "../firebase/config";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { AlertCircle, Shield, MapPin, Filter, Layers, Flame, CheckCircle } from "lucide-react";
-import { HeatmapLayer } from "react-leaflet-heatmap-layer-v3";
+import "leaflet.heat";
+
+// 🏎️ Custom Heatmap Component (using vanilla leaflet.heat)
+function Heatmap({ points }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!points || points.length === 0) return;
+    
+    // Config for the premium neural heatmap look
+    const heat = L.heatLayer(points, {
+      radius: 25,
+      blur: 15,
+      max: 1.0,
+      gradient: {
+        0.4: 'blue',
+        0.6: 'cyan',
+        0.7: 'lime',
+        0.8: 'yellow',
+        1.0: 'red'
+      }
+    }).addTo(map);
+
+    return () => {
+      map.removeLayer(heat);
+    };
+  }, [map, points]);
+
+  return null;
+}
 
 // 🖌️ Custom Marker Factory for Premium Aesthetics
 const createCustomIcon = (color) => {
@@ -95,17 +124,7 @@ export default function UrgencyMap({ user }) {
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
 
-        {showHeatmap && (
-          <HeatmapLayer
-            points={heatmapPoints}
-            longitudeExtractor={(m) => m[1]}
-            latitudeExtractor={(m) => m[0]}
-            intensityExtractor={(m) => m[2]}
-            radius={25}
-            blur={15}
-            max={1.0}
-          />
-        )}
+        {showHeatmap && <Heatmap points={heatmapPoints} />}
 
         {filteredReports.map((report) => {
           const urgency = report.urgency || "Low";
