@@ -14,17 +14,28 @@
   --color-nexus-danger: #EF4444;
 }
 
+/* 🌑 Dark Mode Variables Overrides */
+.dark {
+  --color-nexus-bg: #0B0E14;
+  --color-nexus-card: #151921;
+  --color-nexus-border: #232936;
+  --color-nexus-text: #F3F4F6;
+  --color-nexus-text-muted: #9CA3AF;
+  --color-nexus-light: #1E293B;
+}
+
 @layer base {
   body {
-    background-color: #F5F7FB;
-    color: #111827;
-    @apply font-sans antialiased;
+    background-color: var(--color-nexus-bg);
+    color: var(--color-nexus-text);
+    @apply font-sans antialiased transition-colors duration-300;
   }
 }
 
 @layer components {
   .premium-card {
-    @apply bg-white border border-[var(--color-nexus-border)] rounded-[18px] shadow-sm transition-all duration-300;
+    background-color: var(--color-nexus-card);
+    @apply border border-[var(--color-nexus-border)] rounded-[18px] shadow-sm transition-all duration-300;
   }
   
   .premium-card:hover {
@@ -36,10 +47,12 @@
   }
 
   .nexus-btn-secondary {
-    @apply bg-white text-[var(--color-nexus-primary)] border border-[var(--color-nexus-primary)] px-6 py-3 rounded-xl font-bold hover:bg-[var(--color-nexus-light)] transition-all;
+    background-color: var(--color-nexus-card);
+    @apply text-[var(--color-nexus-primary)] border border-[var(--color-nexus-primary)] px-6 py-3 rounded-xl font-bold hover:bg-[var(--color-nexus-light)] transition-all;
   }
 
   .nexus-input {
-    @apply w-full bg-white border border-[var(--color-nexus-border)] rounded-xl p-4 text-[var(--color-nexus-text)] outline-none focus:ring-2 focus:ring-[var(--color-nexus-primary)]/10 focus:border-[var(--color-nexus-primary)] transition-all;
+    background-color: var(--color-nexus-card);
+    @apply w-full border border-[var(--color-nexus-border)] rounded-xl p-4 text-[var(--color-nexus-text)] outline-none focus:ring-2 focus:ring-[var(--color-nexus-primary)]/10 focus:border-[var(--color-nexus-primary)] transition-all;
   }
 }

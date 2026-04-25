@@ -129,7 +129,7 @@ function App() {
                   <Route path="/my-complaints" element={
                     <ProtectedRoute user={user} role="user">
                       <div className="space-y-6">
-                        <h1 className="text-3xl font-black uppercase tracking-tighter">My <span className="text-[var(--color-nexus-primary)]">Complaints</span></h1>
+                        <h1 className="text-3xl font-black uppercase tracking-tighter text-[var(--color-nexus-text)]">My <span className="text-[var(--color-nexus-primary)]">Complaints</span></h1>
                         <ReportTable user={user} citizenMode={true} />
                       </div>
                     </ProtectedRoute>
