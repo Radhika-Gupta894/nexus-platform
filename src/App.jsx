@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/config";
 
 import Navbar from "./components/Navbar";
@@ -21,7 +21,7 @@ import ReportTable from "./components/ReportTable";
 import CoreConfig from "./components/CoreConfig";
 import Settings from "./pages/Settings";
 
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase/config";
 
 function App() {

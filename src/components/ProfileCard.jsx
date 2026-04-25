@@ -20,7 +20,7 @@ export default function ProfileCard({ user, isOpen, onClose }) {
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, { name: newName });
       setIsEditing(false);
-    } catch (err) {
+    } catch {
       alert("Failed to update name");
     }
   };
@@ -37,7 +37,7 @@ export default function ProfileCard({ user, isOpen, onClose }) {
       
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, { photoURL: url });
-    } catch (err) {
+    } catch {
       alert("Upload failed");
     } finally {
       setUploading(false);

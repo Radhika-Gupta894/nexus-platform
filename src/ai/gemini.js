@@ -24,7 +24,7 @@ const MODELS = [
 /* ==============================
    UNIVERSAL MODEL RUNNER
  ============================== */
-const runPrompt = async (prompt, retryCount = 1) => {
+const runPrompt = async (prompt) => {
   const genAI = getAIInstance();
   if (!genAI) throw new Error("API Key Missing");
 
@@ -59,15 +59,6 @@ const runPrompt = async (prompt, retryCount = 1) => {
   throw lastError || new Error("All AI models are currently overwhelmed or unavailable.");
 };
 
-/* ==============================
-   MOCK FALLBACK (Emergency only)
- ============================== */
-const getMockResponse = (prompt) => {
-  if (prompt.includes("Analyze")) {
-    return JSON.stringify({ category: "General", urgency: "Medium", summary: "NEXUS: Analyzing intelligence offline..." });
-  }
-  return "NEXUS Core is in secure offline mode. Intelligence services are restricted. Please check your API key authorization.";
-};
 
 /* ==============================
    CORE EXPORTS
@@ -110,7 +101,7 @@ export const chatWithAI = async (message) => {
 
 export const analyzeReport = async (text) => {
   try {
-    return await runPrompt(`Analyze: ${text}`, 0);
+    return await runPrompt(`Analyze: ${text}`);
   } catch {
     return JSON.stringify({ category: "General", urgency: "Medium", summary: "Offline analysis pending." });
   }
@@ -119,7 +110,7 @@ export const analyzeReport = async (text) => {
 export const detectCrisis = async (reports) => {
   if (!reports?.length) return null;
   try {
-    return await runPrompt(`Crisis scan: ${JSON.stringify(reports)}`, 0);
+    return await runPrompt(`Crisis scan: ${JSON.stringify(reports)}`);
   } catch {
     return JSON.stringify({ crisis: "Unknown", area: "N/A", severity: "Low", action: "Manual check." });
   }

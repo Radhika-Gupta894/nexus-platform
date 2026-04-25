@@ -2,6 +2,26 @@ import React, { useState, useEffect } from "react";
 import { adminService } from "../firebase/adminService";
 import { Settings, Bell, Zap, Map, Cpu, Power, Save } from "lucide-react";
 
+const ConfigItem = (props) => (
+  <div className="flex items-center justify-between p-6 bg-white border border-[var(--color-nexus-border)] rounded-2xl hover:shadow-md transition-all">
+    <div className="flex items-center gap-4">
+      <div className={`p-3 rounded-xl ${props.active ? 'bg-[var(--color-nexus-light)] text-[var(--color-nexus-primary)]' : 'bg-slate-50 text-slate-400'}`}>
+        <props.icon size={20} />
+      </div>
+      <div>
+        <h4 className="text-sm font-black text-[var(--color-nexus-text)] uppercase tracking-tight">{props.label}</h4>
+        <p className="text-xs text-[var(--color-nexus-text-muted)] mt-0.5">{props.description}</p>
+      </div>
+    </div>
+    <button 
+      onClick={props.onClick}
+      className={`w-14 h-7 rounded-full transition-all relative ${props.active ? 'bg-[var(--color-nexus-primary)]' : 'bg-slate-200'}`}
+    >
+      <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${props.active ? 'left-8' : 'left-1'}`} />
+    </button>
+  </div>
+);
+
 export default function CoreConfig() {
   const [settings, setSettings] = useState({
     themeMode: "light",
@@ -41,26 +61,6 @@ export default function CoreConfig() {
   };
 
   if (loading) return <div className="p-20 text-center animate-pulse">Accessing Neural Config...</div>;
-
-  const ConfigItem = ({ icon: Icon, label, description, active, onClick }) => (
-    <div className="flex items-center justify-between p-6 bg-white border border-[var(--color-nexus-border)] rounded-2xl hover:shadow-md transition-all">
-      <div className="flex items-center gap-4">
-        <div className={`p-3 rounded-xl ${active ? 'bg-[var(--color-nexus-light)] text-[var(--color-nexus-primary)]' : 'bg-slate-50 text-slate-400'}`}>
-          <Icon size={20} />
-        </div>
-        <div>
-          <h4 className="text-sm font-black text-[var(--color-nexus-text)] uppercase tracking-tight">{label}</h4>
-          <p className="text-xs text-[var(--color-nexus-text-muted)] mt-0.5">{description}</p>
-        </div>
-      </div>
-      <button 
-        onClick={onClick}
-        className={`w-14 h-7 rounded-full transition-all relative ${active ? 'bg-[var(--color-nexus-primary)]' : 'bg-slate-200'}`}
-      >
-        <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${active ? 'left-8' : 'left-1'}`} />
-      </button>
-    </div>
-  );
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, writeBatch, query, where } from "firebase/firestore";
+import { collection, onSnapshot, doc, deleteDoc, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { adminService } from "../firebase/adminService";
 import { Search, Filter, AlertCircle, CheckCircle2, Clock, Trash2, CheckSquare, Shield, ShieldOff, Layers, Eye, Download, UserPlus, MessageCircle } from "lucide-react";

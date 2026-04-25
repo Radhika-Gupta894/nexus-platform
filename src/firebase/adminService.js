@@ -3,7 +3,6 @@ import {
   collection, 
   doc, 
   updateDoc, 
-  deleteDoc, 
   writeBatch, 
   getDocs, 
   query, 

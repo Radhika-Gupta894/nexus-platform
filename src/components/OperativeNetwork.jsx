@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { adminService } from "../firebase/adminService";
 import { Users, Shield, CheckCircle, Clock, Award, Star, Search } from "lucide-react";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
