@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, onSnapshot, doc, updateDoc, deleteDoc, writeBatch, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { adminService } from "../firebase/adminService";
-import { Search, Filter, AlertCircle, CheckCircle2, Clock, Trash2, CheckSquare, Shield, ShieldOff, Layers, Eye, Download, UserPlus } from "lucide-react";
+import { Search, Filter, AlertCircle, CheckCircle2, Clock, Trash2, CheckSquare, Shield, ShieldOff, Layers, Eye, Download, UserPlus, MessageCircle } from "lucide-react";
 import ReportDetails from "./ReportDetails";
 
 export default function ReportTable({ user, citizenMode = false }) {
@@ -278,6 +278,13 @@ export default function ReportTable({ user, citizenMode = false }) {
                         <button 
                           onClick={() => setViewingReport(report)}
                           className="p-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                          title="View Full Intel & Chat"
+                        >
+                          <MessageCircle size={16} />
+                        </button>
+                        <button 
+                          onClick={() => setViewingReport(report)}
+                          className="p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-600 hover:text-white transition-all shadow-sm"
                           title="View Full Intel"
                         >
                           <Eye size={16} />

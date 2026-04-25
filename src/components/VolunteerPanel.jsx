@@ -6,12 +6,16 @@ import {
   Users, CheckCircle2, Clock, MapPin, 
   UploadCloud, AlertCircle, Sparkles, Send 
 } from "lucide-react";
-import ChatBox from "./ChatBox"; // MOVED TO TOP
+import ChatBox from "./ChatBox"; 
+import { chatService } from "../firebase/chatService";
 
 export default function VolunteerPanel({ user }) {
   const [tasks, setTasks] = useState([]);
   const [files, setFiles] = useState({});
   const [uploading, setUploading] = useState({});
+
+  const [activeChatReportId, setActiveChatReportId] = useState(null);
+  const [activeChatTitle, setActiveChatTitle] = useState("Global Intelligence");
 
   useEffect(() => {
     if (!user) return;
@@ -25,6 +29,12 @@ export default function VolunteerPanel({ user }) {
 
     return () => unsubscribe();
   }, [user]);
+
+  const openChat = async (report) => {
+    await chatService.getOrCreateChatRoom(report, user);
+    setActiveChatReportId(report.id);
+    setActiveChatTitle(`Mission Comms: ${report.type}`);
+  };
 
   const updateStatus = async (id, status) => {
     try {
@@ -102,7 +112,7 @@ export default function VolunteerPanel({ user }) {
             </div>
            ) : (
             tasks.map((task) => (
-              <div key={task.id} className="premium-card p-8 relative overflow-hidden group hover:border-[var(--color-nexus-primary)]/30 transition-all flex flex-col md:flex-row gap-8 shadow-sm">
+              <div key={task.id} className={`premium-card p-8 relative overflow-hidden group hover:border-[var(--color-nexus-primary)]/30 transition-all flex flex-col md:flex-row gap-8 shadow-sm ${activeChatReportId === task.id ? 'border-[var(--color-nexus-primary)] ring-2 ring-[var(--color-nexus-primary)]/10' : ''}`}>
                 <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none group-hover:scale-110 transition-all">
                   <Sparkles size={80} className="text-[var(--color-nexus-primary)]" />
                 </div>
@@ -129,16 +139,27 @@ export default function VolunteerPanel({ user }) {
                     "{task.summary || 'No dispatch summary provided.'}"
                   </div>
 
-                  {task.status !== 'Resolved' && (
-                    <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-4">
+                    {task.status !== 'Resolved' && (
                        <button 
                         onClick={() => updateStatus(task.id, "In Progress")}
                         className="px-6 py-3 bg-[var(--color-nexus-light)] hover:bg-[var(--color-nexus-primary)] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest text-[var(--color-nexus-primary)] transition-all active:scale-95 shadow-sm"
                        >
                          Acknowledge Mission
                        </button>
-                    </div>
-                  )}
+                    )}
+                    <button 
+                      onClick={() => openChat(task)}
+                      className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm flex items-center gap-2 ${
+                        activeChatReportId === task.id 
+                          ? 'bg-[var(--color-nexus-primary)] text-white' 
+                          : 'bg-white border border-[var(--color-nexus-border)] text-[var(--color-nexus-text)] hover:border-[var(--color-nexus-primary)]'
+                      }`}
+                    >
+                      <Send size={14} />
+                      Chat with Citizen
+                    </button>
+                  </div>
                 </div>
 
                 {task.status !== 'Resolved' && (
@@ -184,7 +205,15 @@ export default function VolunteerPanel({ user }) {
 
         {/* Chat Column */}
         <div className="xl:col-span-1 sticky top-24">
-           <ChatBox user={user} />
+           {activeChatReportId && (
+             <button 
+               onClick={() => { setActiveChatReportId(null); setActiveChatTitle("Global Intelligence"); }}
+               className="mb-4 text-[10px] font-black uppercase tracking-widest text-[var(--color-nexus-primary)] hover:underline flex items-center gap-2"
+             >
+               ← Back to Global Intelligence
+             </button>
+           )}
+           <ChatBox user={user} reportId={activeChatReportId} title={activeChatTitle} />
         </div>
       </div>
     </div>

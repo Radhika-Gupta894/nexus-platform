@@ -19,6 +19,7 @@ import AccessDenied from "./pages/AccessDenied";
 import Analytics from "./components/Analytics";
 import ReportTable from "./components/ReportTable";
 import CoreConfig from "./components/CoreConfig";
+import Settings from "./pages/Settings";
 
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase/config";
@@ -105,12 +106,10 @@ function App() {
                       <div className="premium-card p-8"><Analytics /></div>
                     </ProtectedRoute>
                   } />
+                  {/* Shared Settings Route (Filtered inside) */}
                   <Route path="/settings" element={
-                    <ProtectedRoute user={user} role="admin">
-                      <div className="space-y-6">
-                        <h1 className="text-3xl font-black uppercase tracking-tighter">System <span className="text-[var(--color-nexus-primary)]">Configuration</span></h1>
-                        <div className="premium-card p-10"><CoreConfig /></div>
-                      </div>
+                    <ProtectedRoute user={user}>
+                      <Settings user={user} />
                     </ProtectedRoute>
                   } />
                   
