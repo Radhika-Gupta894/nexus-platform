@@ -4,8 +4,7 @@ import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../firebase/config";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { AlertCircle, Shield, MapPin, Filter, Layers, Flame, CheckCircle } from "lucide-react";
-import "leaflet.heat";
+import { AlertCircle, Shield, MapPin, Filter, Layers, Flame, CheckCircle2 } from "lucide-react";
 
 // 🏎️ Custom Heatmap Component (using vanilla leaflet.heat)
 function Heatmap({ points }) {
@@ -14,22 +13,42 @@ function Heatmap({ points }) {
   useEffect(() => {
     if (!points || points.length === 0) return;
     
-    // Config for the premium neural heatmap look
-    const heat = L.heatLayer(points, {
-      radius: 25,
-      blur: 15,
-      max: 1.0,
-      gradient: {
-        0.4: 'blue',
-        0.6: 'cyan',
-        0.7: 'lime',
-        0.8: 'yellow',
-        1.0: 'red'
+    // Ensure L is on window for the heatmap plugin if it expects it
+    if (typeof window !== "undefined") {
+      window.L = L;
+    }
+
+    // Dynamically import leaflet.heat to avoid build-time issues with window/L
+    let heatLayer;
+    
+    const initHeat = async () => {
+      try {
+        await import("leaflet.heat");
+        if (L.heatLayer) {
+          heatLayer = L.heatLayer(points, {
+            radius: 25,
+            blur: 15,
+            max: 1.0,
+            gradient: {
+              0.4: 'blue',
+              0.6: 'cyan',
+              0.7: 'lime',
+              0.8: 'yellow',
+              1.0: 'red'
+            }
+          }).addTo(map);
+        }
+      } catch (err) {
+        console.error("Failed to load heatmap layer:", err);
       }
-    }).addTo(map);
+    };
+
+    initHeat();
 
     return () => {
-      map.removeLayer(heat);
+      if (heatLayer) {
+        map.removeLayer(heatLayer);
+      }
     };
   }, [map, points]);
 
@@ -155,7 +174,7 @@ export default function UrgencyMap({ user }) {
                    <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${report.status?.toLowerCase() === 'resolved' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
                      {report.status}
                    </span>
-                   {report.status === 'Resolved' && <CheckCircle size={14} className="text-emerald-400" />}
+                   {report.status === 'Resolved' && <CheckCircle2 size={14} className="text-emerald-400" />}
                 </div>
               </div>
             </Popup>
