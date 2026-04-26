@@ -15,10 +15,16 @@ export default function ChatBox({ user, reportId, title = "Tactical Comms" }) {
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef(null);
 
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
   // 🔄 Real-time Message Subscription
   useEffect(() => {
     // Ensure room exists
-    chatService.getOrCreateChatRoom(reportId ? { id: reportId, type: title } : null, user);
+    chatService.getOrCreateChatRoom(reportId ? { id: reportId, type: title } : null);
 
     const unsubscribe = chatService.subscribeToMessages(reportId, (msgs) => {
       setMessages(msgs);
@@ -26,13 +32,7 @@ export default function ChatBox({ user, reportId, title = "Tactical Comms" }) {
     });
 
     return () => unsubscribe();
-  }, [reportId, user, title]);
-
-  const scrollToBottom = () => {
-    setTimeout(() => {
-      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  };
+  }, [reportId, title]);
 
   const handleSend = async (e) => {
     e.preventDefault();

@@ -85,7 +85,7 @@ export default function Sidebar({ user }) {
   };
 
   return (
-    <div className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-[var(--color-nexus-border)] p-6 z-[9999]" id="nexus-sidebar">
+    <div className="fixed left-0 top-0 h-screen w-64 bg-[var(--color-nexus-card)] border-r border-[var(--color-nexus-border)] p-6 z-[9999]" id="nexus-sidebar">
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-[var(--color-nexus-primary)]">NEXUS</h1>
         <p className="text-sm text-[var(--color-nexus-text-muted)]">Smart Impact Platform</p>

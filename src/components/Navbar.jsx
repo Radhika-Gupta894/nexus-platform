@@ -31,7 +31,7 @@ export default function Navbar({ user }) {
   const initials = user?.name ? user.name.charAt(0).toUpperCase() : "U";
 
   return (
-    <nav className="h-20 bg-white border-b border-[var(--color-nexus-border)] flex items-center justify-between px-8 sticky top-0 z-30 shadow-sm">
+    <nav className="h-20 bg-[var(--color-nexus-card)] border-b border-[var(--color-nexus-border)] flex items-center justify-between px-8 sticky top-0 z-30 shadow-sm">
       
       {/* Brand area inside main content */}
       <div className="flex items-center gap-10">

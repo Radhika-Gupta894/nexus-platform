@@ -20,7 +20,7 @@ export default function ProfileCard({ user, isOpen, onClose }) {
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, { name: newName });
       setIsEditing(false);
-    } catch (err) {
+    } catch {
       alert("Failed to update name");
     }
   };
@@ -37,7 +37,7 @@ export default function ProfileCard({ user, isOpen, onClose }) {
       
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, { photoURL: url });
-    } catch (err) {
+    } catch {
       alert("Upload failed");
     } finally {
       setUploading(false);
@@ -48,16 +48,16 @@ export default function ProfileCard({ user, isOpen, onClose }) {
 
   const getRoleBadge = (role) => {
     switch (role?.toLowerCase()) {
-      case 'admin': return 'bg-red-50 text-red-600 border-red-100';
-      case 'volunteer': return 'bg-blue-50 text-blue-600 border-blue-100';
-      default: return 'bg-emerald-50 text-emerald-600 border-emerald-100';
+      case 'admin': return 'bg-red-500/10 text-red-500 border-red-500/20';
+      case 'volunteer': return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+      default: return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
     }
   };
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm" onClick={onClose} />
-      <div className="absolute top-20 right-8 w-80 bg-white border border-[var(--color-nexus-border)] rounded-[2.5rem] shadow-2xl z-50 p-6 animate-in slide-in-from-top-4 duration-300">
+      <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute top-20 right-8 w-80 bg-[var(--color-nexus-card)] border border-[var(--color-nexus-border)] rounded-[2.5rem] shadow-2xl z-50 p-6 animate-in slide-in-from-top-4 duration-300">
         
         {/* Profile Header */}
         <div className="flex flex-col items-center mb-6">
@@ -74,7 +74,7 @@ export default function ProfileCard({ user, isOpen, onClose }) {
                 </div>
               )}
             </div>
-            <label className="absolute -bottom-2 -right-2 p-2 bg-white border border-[var(--color-nexus-border)] rounded-xl shadow-lg cursor-pointer hover:bg-[var(--color-nexus-light)] transition-all">
+            <label className="absolute -bottom-2 -right-2 p-2 bg-[var(--color-nexus-card)] border border-[var(--color-nexus-border)] rounded-xl shadow-lg cursor-pointer hover:bg-[var(--color-nexus-light)] transition-all">
               <Camera size={16} className="text-[var(--color-nexus-primary)]" />
               <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
             </label>
@@ -89,8 +89,8 @@ export default function ProfileCard({ user, isOpen, onClose }) {
                   className="w-full nexus-input py-2 text-center text-sm font-bold"
                   autoFocus
                 />
-                <button onClick={handleUpdateName} className="p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100"><Check size={16}/></button>
-                <button onClick={() => setIsEditing(false)} className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100"><X size={16}/></button>
+                <button onClick={handleUpdateName} className="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg hover:bg-emerald-500/20"><Check size={16}/></button>
+                <button onClick={() => setIsEditing(false)} className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20"><X size={16}/></button>
               </div>
             ) : (
               <div className="group flex items-center justify-center gap-2 cursor-pointer" onClick={() => setIsEditing(true)}>
@@ -125,7 +125,7 @@ export default function ProfileCard({ user, isOpen, onClose }) {
         {/* Action Buttons */}
         <button 
           onClick={logout}
-          className="w-full flex items-center justify-center gap-3 py-4 bg-red-50 text-red-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-100 transition-all active:scale-95 border border-red-100"
+          className="w-full flex items-center justify-center gap-3 py-4 bg-red-500/10 text-red-500 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-500/20 transition-all active:scale-95 border border-red-500/20"
         >
           <LogOut size={18} />
           Terminate Session

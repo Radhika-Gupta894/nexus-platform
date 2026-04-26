@@ -45,7 +45,7 @@ const AddReport = () => {
       const result = await Tesseract.recognize(file, "eng");
       setFormData({ ...formData, description: result.data.text });
       setImageLoading(false);
-    } catch (error) {
+    } catch {
       setImageLoading(false);
       alert("Image scan failed");
     }

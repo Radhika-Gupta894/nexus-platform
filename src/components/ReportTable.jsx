@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, writeBatch, query, where } from "firebase/firestore";
+import { collection, onSnapshot, doc, deleteDoc, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { adminService } from "../firebase/adminService";
 import { Search, Filter, AlertCircle, CheckCircle2, Clock, Trash2, CheckSquare, Shield, ShieldOff, Layers, Eye, Download, UserPlus, MessageCircle } from "lucide-react";
@@ -164,7 +164,7 @@ export default function ReportTable({ user, citizenMode = false }) {
             <select 
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="appearance-none bg-white border border-[var(--color-nexus-border)] rounded-xl py-2.5 pl-10 pr-10 text-sm focus:ring-2 focus:ring-[var(--color-nexus-primary)]/20 outline-none transition-all cursor-pointer text-[var(--color-nexus-text)]"
+              className="appearance-none bg-[var(--color-nexus-card)] border border-[var(--color-nexus-border)] rounded-xl py-2.5 pl-10 pr-10 text-sm focus:ring-2 focus:ring-[var(--color-nexus-primary)]/20 outline-none transition-all cursor-pointer text-[var(--color-nexus-text)]"
             >
               <option value="All">All Status</option>
               <option value="Pending">Pending</option>
@@ -178,7 +178,7 @@ export default function ReportTable({ user, citizenMode = false }) {
           {isAdmin && (
             <button 
               onClick={exportToCSV}
-              className="p-2.5 bg-white border border-[var(--color-nexus-border)] text-[var(--color-nexus-text-muted)] rounded-xl hover:text-[var(--color-nexus-primary)] transition-all shadow-sm"
+              className="p-2.5 bg-[var(--color-nexus-card)] border border-[var(--color-nexus-border)] text-[var(--color-nexus-text-muted)] rounded-xl hover:text-[var(--color-nexus-primary)] transition-all shadow-sm"
               title="Export Intelligence CSV"
             >
               <Download size={18} />
@@ -191,14 +191,14 @@ export default function ReportTable({ user, citizenMode = false }) {
               
               <button 
                 onClick={() => handleBulkUpdate({ status: "Resolved" }, "Marked Resolved")}
-                className="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all flex items-center gap-2"
+                className="px-3 py-1.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all flex items-center gap-2"
               >
                 <CheckSquare size={10} /> Resolve
               </button>
 
               <button 
                 onClick={() => handleBulkUpdate({ privacy: "Private" }, "Set to Private")}
-                className="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all flex items-center gap-2"
+                className="px-3 py-1.5 bg-red-500/10 text-red-500 border border-red-500/20 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
               >
                 <ShieldOff size={10} /> Private
               </button>
@@ -208,7 +208,7 @@ export default function ReportTable({ user, citizenMode = false }) {
                   const v = volunteers.find(vol => vol.id === e.target.value);
                   if (v) handleBulkUpdate({ assignedTo: v.name, assignedToEmail: v.email, status: "Assigned" }, `Assigned to ${v.name}`);
                 }}
-                className="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest outline-none border-none cursor-pointer"
+                className="px-3 py-1.5 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-lg text-[9px] font-black uppercase tracking-widest outline-none cursor-pointer"
               >
                 <option value="">Assign Operative</option>
                 {volunteers.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
@@ -225,7 +225,7 @@ export default function ReportTable({ user, citizenMode = false }) {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-[var(--color-nexus-border)] bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-[var(--color-nexus-border)] bg-[var(--color-nexus-card)]">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-[var(--color-nexus-bg)]/50 text-[var(--color-nexus-primary)] uppercase tracking-[0.2em] text-[10px] font-black">

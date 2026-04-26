@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
-import { ShieldCheck, User, Users } from "lucide-react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 
 const RoleRouter = ({ user }) => {

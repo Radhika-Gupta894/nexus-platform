@@ -16,7 +16,7 @@ export const chatService = {
   /**
    * Initializes or gets a chat room for a specific report
    */
-  async getOrCreateChatRoom(report, currentUser) {
+  async getOrCreateChatRoom(report) {
     const id = report?.id || "global";
     const roomRef = doc(db, "chatRooms", id);
     const roomSnap = await getDoc(roomRef);

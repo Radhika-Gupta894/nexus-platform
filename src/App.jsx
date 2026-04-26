@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/config";
 
 import Navbar from "./components/Navbar";
@@ -21,7 +21,7 @@ import ReportTable from "./components/ReportTable";
 import CoreConfig from "./components/CoreConfig";
 import Settings from "./pages/Settings";
 
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase/config";
 
 function App() {
@@ -129,7 +129,7 @@ function App() {
                   <Route path="/my-complaints" element={
                     <ProtectedRoute user={user} role="user">
                       <div className="space-y-6">
-                        <h1 className="text-3xl font-black uppercase tracking-tighter">My <span className="text-[var(--color-nexus-primary)]">Complaints</span></h1>
+                        <h1 className="text-3xl font-black uppercase tracking-tighter text-[var(--color-nexus-text)]">My <span className="text-[var(--color-nexus-primary)]">Complaints</span></h1>
                         <ReportTable user={user} citizenMode={true} />
                       </div>
                     </ProtectedRoute>
